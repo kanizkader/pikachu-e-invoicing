@@ -1,0 +1,15 @@
+[MAIN]
+
+disable=
+    bad-indentation,
+    unspecified-encoding,
+    broad-exception-caught,
+    consider-using-with,
+    missing-function-docstring,
+    superfluous-parens,
+    unused-argument,
+    no-method-argument,
+    import-error,
+    fatal,
+
+ignore-paths=deploy/.*$
