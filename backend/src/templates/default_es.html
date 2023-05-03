@@ -1,0 +1,123 @@
+<!doctype = html>
+<html lang = "es">
+    <head>
+        <meta charset="utf8">
+        <link rel="stylesheet" type="text/css" href="http://sprint3backend-env.eba-xjppryyv.us-east-1.elasticbeanstalk.com/default" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Noto Sans SC', sans-serif;
+            }
+        </style>
+        <title>e-Invoice</title>
+    </head>
+    <body>
+        
+        <div class = 'SenderInformation'>
+            <div class = 'Title'>
+                <h1>Factura de pago</h1>
+            </div>
+            <div class = 'AccountingSupplierParty'>
+                <p>
+                    {{ InvoiceAccountingCustomerPartyPartyPartyLegalEntityRegistrationName }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressStreetName }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressPostalZone }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressCityName }}<br>
+                    {{ suppliercountryname }}
+                </p>
+            </div>
+        </div>
+        
+        <div class = 'SendeeInformation'>
+            <div class = 'AccountingCustomerParty'> 
+                <h4>A:</h4>
+                <p>
+                    {{  InvoiceAccountingCustomerPartyPartyPartyNameName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressStreetName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressCityName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressPostalZone  }}<br>
+                    {{  customercountryname  }}
+            </div>
+            <div class = 'InvoiceData'>
+                <div class = 'InvoiceDate'>
+                    <h5>Fecha de la factura: {{ InvoiceIssueDate }}</h5>
+                </div>
+                <div class = 'DueDate'>
+                    <h5>Debido por: {{ InvoiceDueDate }}</h5>
+                </div>
+                <div class = 'InvoiceNumber'>
+                    <h5>Número de factura: {{ InvoicePaymentMeansPaymentID }}</h5>
+                </div>
+            </div>
+        </div>
+        
+
+        <table class = 'TransactionDetailsTable'>
+            <tr>
+                <th>Cantidad</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>GST</th>
+            </tr>
+            {% for element in InvoicedElements %}
+                <tr>
+                    <td>{{ element['InvoicedQuantity'] }}</td>
+                    <td>{{ element['InvoicedQuantityunitCode'] }}</td>
+                    <td>{{ element['ItemName'] }}</td>
+                    <td>{{ element['ItemDescription'] }}</td>
+                    <td>${{ element['PricePriceAmount'] }} {{ element['PricePriceAmountcurrencyID'] }}</td>
+                    <td>${{ element['LineExtensionAmount'] }} {{ element['LineExtensionAmountcurrencyID'] }}</td>
+                    <td>${{element['InvoiceLineTaxTotal']}}{{ element['PricePriceAmountcurrencyID'] }}</td>
+                </tr>
+            {% endfor %}
+            
+        </table>  
+        <div class = 'PaymentSummary'>
+            <div class = 'PaymentType'>
+                <div class = 'Subtotal'>
+                    Total parcial:
+                </div>
+                <div class = TotalAmount>
+                    Cantidad total: 
+                </div>
+            </div>
+            <div class = 'PaymentAmount'>
+                <div class = 'SubtotalAmount'>
+                    ${{ InvoiceLegalMonetaryTotalTaxExclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                </div>
+                <div class = 'TotalAmount'>
+                    ${{ InvoiceLegalMonetaryTotalTaxInclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxInclusiveAmountcurrencyID }}
+                </div>
+            </div>
+        </div>
+        <div class = 'GSTSummary'>
+            <h2>GST RESUMEN</h2>
+            <table class = 'GSTTable'>
+                <tr>            
+                    <td>Descripción</td>
+                    <td>Cantidad</td>
+                    <td>GST%</td>
+                    <td>GST</td>
+                    <td>Cantidad</td>
+                </tr>
+                <tr>
+                    <td>Tarifa estándar</td>
+                    <td>${{ InvoiceTaxTotalTaxSubtotalTaxableAmount }} {{ InvoiceTaxTotalTaxSubtotalTaxableAmountcurrencyID }}</td>
+                    <td>{{ InvoiceTaxTotalTaxSubtotalTaxCategoryPercent }}%</td>
+                    <td>${{ InvoiceTaxTotalTaxAmount }}{{ InvoiceTaxTotalTaxAmountcurrencyID }}</td>
+                    <td>${{ InvoiceLegalMonetaryTotalPayableAmount }} {{ InvoiceLegalMonetaryTotalPayableAmountcurrencyID }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class = 'Notes'>
+            <p>notas: {{ InvoicePaymentTermsNote }}</p>
+        </div>
+    </body>
+</html>

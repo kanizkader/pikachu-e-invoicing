@@ -1,0 +1,136 @@
+<!doctype = html>
+<html lang = "en">
+    <head>
+        <meta charset="utf8">
+        <link rel="stylesheet" type="text/css" href="http://sprint3backend-env.eba-xjppryyv.us-east-1.elasticbeanstalk.com/vertical" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Noto Sans SC', sans-serif;
+            }
+        </style>
+        <title>Test</title>
+    </head>
+    <body>
+        
+        <div class = 'SenderInformation'>
+            <div class = 'Title'>
+                <h1>付款发票</h1>
+                <div class = 'AccountingSupplierParty'>
+                    <p>
+                        {{ InvoiceAccountingCustomerPartyPartyPartyLegalEntityRegistrationName }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressStreetName }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressPostalZone }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressCityName }}<br>
+                        {{ suppliercountryname }}
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class = 'SendeeInformation'>
+            
+            <div class = 'AccountingCustomerParty'> 
+                <div class = 'InvoiceData'>
+                    <div class = 'InvoiceDate'>
+                        <h5>发票日期: {{ InvoiceIssueDate }}</h5>
+                    </div>
+                    <div class = 'InvoiceNumber'>
+                        <h5>发票号码: {{ InvoicePaymentMeansPaymentID }}</h5>
+                    </div>
+                </div>
+                <h4>To:</h4>
+                <p>
+                    {{  InvoiceAccountingCustomerPartyPartyPartyNameName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressStreetName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressCityName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressPostalZone  }}<br>
+                    {{  customercountryname  }}
+            </div>
+        </div>
+        
+
+        <table class = 'TransactionDetailsTable'>
+            {% for element in InvoicedElements %}
+            <tr  width = "200">
+                <th>数量</th>
+                <td>{{ element['InvoicedQuantity'] }}</td>
+            </tr>
+            <tr>
+                <th>代码</th>
+                <td>{{ element['InvoicedQuantityunitCode'] }}</td>
+            </tr>
+            <tr>
+                <th>帐户 </th>
+                <td>{{ element['ItemName'] }}</td>
+            </tr>
+            <tr>
+                <th>商品说明</th>
+                <td>{{ element['ItemDescription'] }}</td>
+            </tr>
+            <tr>
+                <th>价格</th>
+                <td>${{ element['PricePriceAmount'] }} {{ element['PricePriceAmountcurrencyID'] }}</td>
+            </tr>
+            <tr>
+                <th>数量</th>
+                <td>${{ element['LineExtensionAmount'] }} {{ element['LineExtensionAmountcurrencyID'] }}</td>
+            </tr>
+            <tr>
+                <th>消费税</th>
+                <td>${{element['InvoiceLineTaxTotal']}}{{ element['PricePriceAmountcurrencyID'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>  
+
+        <div class = 'PaymentSummary'>
+            <div class = 'PaymentType'>
+                <div class = 'Subtotal'>
+                    小计金额:
+                </div>
+                <div class = 'PaymentAmount'>
+                    <div class = 'SubtotalAmount'>
+                        ${{ InvoiceLegalMonetaryTotalTaxExclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                    </div>
+                </div>
+                <div class = TotalAmount>
+                    应付总额: 
+                </div>
+                <div class = 'PaymentAmount'>
+                    <div class = 'TotalAmount'>
+                        ${{ InvoiceLegalMonetaryTotalTaxInclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxInclusiveAmountcurrencyID }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = 'GSTSummary'>
+            <h2 align = "Left">消费税摘要</h2>
+            <table class = 'GSTTable'>
+                <tr>            
+                    <th align = "left">描述</th>
+                    <th align = "left">标准率</th>
+                </tr>
+                    <td>数量: </td>
+                    <td>${{ InvoiceTaxTotalTaxSubtotalTaxableAmount }} {{ InvoiceTaxTotalTaxSubtotalTaxableAmountcurrencyID }}</td>
+                </tr>
+                    <td>消费税%: </td>
+                    <td>{{ InvoiceTaxTotalTaxSubtotalTaxCategoryPercent }}%</td>
+                </tr>
+                    <td>消费税: </td>
+                    <td>${{ InvoiceTaxTotalTaxAmount }}{{ InvoiceTaxTotalTaxAmountcurrencyID }}</td>
+                </tr>
+                    <td>总金额: </td>
+                    <td>${{ InvoiceLegalMonetaryTotalPayableAmount }} {{ InvoiceLegalMonetaryTotalPayableAmountcurrencyID }}</td>
+                </tr>
+
+            </table>
+        </div>
+        
+    </body>
+</html>

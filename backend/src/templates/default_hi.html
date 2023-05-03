@@ -1,0 +1,123 @@
+<!doctype = html>
+<html lang = "hi">
+    <head>
+        <meta charset="utf8">
+        <link rel="stylesheet" type="text/css" href="http://sprint3backend-env.eba-xjppryyv.us-east-1.elasticbeanstalk.com/default" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Noto Sans SC', sans-serif;
+            }
+        </style>
+        <title>e-Invoice</title>
+    </head>
+    <body>
+        
+        <div class = 'SenderInformation'>
+            <div class = 'Title'>
+                <h1>भुगतान इनवॉइस</h1>
+            </div>
+            <div class = 'AccountingSupplierParty'>
+                <p>
+                    {{ InvoiceAccountingCustomerPartyPartyPartyLegalEntityRegistrationName }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressStreetName }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressPostalZone }}<br>
+                    {{ InvoiceAccountingSupplierPartyPartyPostalAddressCityName }}<br>
+                    {{ suppliercountryname }}
+                </p>
+            </div>
+        </div>
+        
+        <div class = 'SendeeInformation'>
+            <div class = 'AccountingCustomerParty'> 
+                <h4>को:</h4>
+                <p>
+                    {{  InvoiceAccountingCustomerPartyPartyPartyNameName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressStreetName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressCityName  }}<br>
+                    {{  InvoiceAccountingCustomerPartyPartyPostalAddressPostalZone  }}<br>
+                    {{  customercountryname  }}
+            </div>
+            <div class = 'InvoiceData'>
+                <div class = 'InvoiceDate'>
+                    <h5>चालान की तारीख: {{ InvoiceIssueDate }}</h5>
+                </div>
+                <div class = 'DueDate'>
+                    <h5>तक देय: {{ InvoiceDueDate }}</h5>
+                </div>
+                <div class = 'InvoiceNumber'>
+                    <h5>बीजक संख्या: {{ InvoicePaymentMeansPaymentID }}</h5>
+                </div>
+            </div>
+        </div>
+        
+
+        <table class = 'TransactionDetailsTable'>
+            <tr>
+                <th>मात्रा</th>
+                <th>कोड</th>
+                <th>नाम</th>
+                <th>विवरण</th>
+                <th>कीमत</th>
+                <th>मात्रा</th>
+                <th>जीएसटी</th>
+            </tr>
+            {% for element in InvoicedElements %}
+                <tr>
+                    <td>{{ element['InvoicedQuantity'] }}</td>
+                    <td>{{ element['InvoicedQuantityunitCode'] }}</td>
+                    <td>{{ element['ItemName'] }}</td>
+                    <td>{{ element['ItemDescription'] }}</td>
+                    <td>${{ element['PricePriceAmount'] }} {{ element['PricePriceAmountcurrencyID'] }}</td>
+                    <td>${{ element['LineExtensionAmount'] }} {{ element['LineExtensionAmountcurrencyID'] }}</td>
+                    <td>${{element['InvoiceLineTaxTotal']}}{{ element['PricePriceAmountcurrencyID'] }}</td>
+                </tr>
+            {% endfor %}
+            
+        </table>  
+        <div class = 'PaymentSummary'>
+            <div class = 'PaymentType'>
+                <div class = 'Subtotal'>
+                    उप-योग:
+                </div>
+                <div class = TotalAmount>
+                    कुल राशि: 
+                </div>
+            </div>
+            <div class = 'PaymentAmount'>
+                <div class = 'SubtotalAmount'>
+                    ${{ InvoiceLegalMonetaryTotalTaxExclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                </div>
+                <div class = 'TotalAmount'>
+                    ${{ InvoiceLegalMonetaryTotalTaxInclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxInclusiveAmountcurrencyID }}
+                </div>
+            </div>
+        </div>
+        <div class = 'GSTSummary'>
+            <h2>जीएसटी सारांश</h2>
+            <table class = 'GSTTable'>
+                <tr>            
+                    <td>विवरण</td>
+                    <td>मात्रा</td>
+                    <td>जीएसटी%</td>
+                    <td>जीएसटी%</td>
+                    <td>कुल</td>
+                </tr>
+                <tr>
+                    <td>मानक दर</td>
+                    <td>${{ InvoiceTaxTotalTaxSubtotalTaxableAmount }} {{ InvoiceTaxTotalTaxSubtotalTaxableAmountcurrencyID }}</td>
+                    <td>{{ InvoiceTaxTotalTaxSubtotalTaxCategoryPercent }}%</td>
+                    <td>${{ InvoiceTaxTotalTaxAmount }}{{ InvoiceTaxTotalTaxAmountcurrencyID }}</td>
+                    <td>${{ InvoiceLegalMonetaryTotalPayableAmount }} {{ InvoiceLegalMonetaryTotalPayableAmountcurrencyID }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class = 'Notes'>
+            <p>टिप्पणियाँ: {{ InvoicePaymentTermsNote }}</p>
+        </div>
+    </body>
+</html>

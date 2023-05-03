@@ -1,0 +1,152 @@
+<!doctype = html>
+<html lang = "zh-Hans">
+    <head>
+        <meta charset="utf8">
+        <link rel="stylesheet" type="text/css" href="http://sprint3backend-env.eba-xjppryyv.us-east-1.elasticbeanstalk.com/detailed" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Noto Sans SC', sans-serif;
+            }
+        </style>
+        <title>e-Invoice</title>
+    </head>
+    <body>
+        <div class = 'InvoiceInformation'>
+            <div class = 'InvoiceDate'>
+                <h3>发票日期: {{ InvoiceIssueDate }}</h3>
+            </div>
+            <div class = 'InvoiceNumber'> 
+                <h3>发票号码。: {{ InvoiceID }}</h3>
+            </div>
+            <div class = 'InvoiceLocation'>
+                <h3>发行地点: {{ suppliercountryname }}</h3>
+            </div>
+        </div>
+        <div class = 'Title'>
+            <h1>付款发票</h1>
+        </div>
+        <div class = 'PartyInformation'>
+            <div class = 'SupplierInformation'>
+                <h2>开票人: </h2>
+                <div class = 'SupplierLocation'>
+                    <p>
+                        {{ InvoiceAccountingCustomerPartyPartyPartyLegalEntityRegistrationName }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressStreetName }}
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressPostalZone }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressCityName }}<br>
+                        {{ suppliercountryname }}
+                    </p>
+                </div>
+                <div class = 'AdditionSupplierInformation'>
+                    <p>
+                        {{ InvoiceAccountingSupplierPartyPartyContactName }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyContactTelepohne }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyContactElectronicMail }}
+                    </p>
+                </div>
+            </div>
+            <div class = 'CustomerInformation'>
+                <h2>记账到:</h2>
+                <div class = 'AdditionCustomerInformation'>
+                    <p>
+                        {{ InvoiceAccountingCustomerPartyPartyContactName }}<br>
+                        {{ InvoiceAccountingCustomerPartyPartyContactTelepohne }}<br>
+                        {{ InvoiceAccountingCustomerPartyPartyContactElectronicMail }}
+                    </p>
+                </div>
+                <div class = 'CustomerLocation'>                
+                    <p>
+                        {{  InvoiceAccountingCustomerPartyPartyPartyNameName  }}<br>
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressStreetName  }}
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressCityName  }}<br>
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressPostalZone  }}<br>
+                        {{  customercountryname  }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <table class = 'TransactionDetailsTable'>
+            <tr>
+                <th>数量</th>
+                <th>代码</th>
+                <th>帐户</th>
+                <th>姓名</th>
+                <th>描述</th>
+                <th>价格</th>
+                <th>数量</th>
+                <th>消费税</th>
+            </tr>
+            {% for element in InvoicedElements %}
+                <tr>
+                    <td>{{ element['InvoicedQuantity'] }}</td>
+                    <td>{{ element['InvoicedQuantityunitCode'] }}</td>
+                    <td></td>
+                    <td>{{ element['ItemName'] }}</td>
+                    <td>{{ element['ItemDescription'] }}</td>
+                    <td>${{ element['PricePriceAmount'] }} {{ element['PricePriceAmountcurrencyID'] }}</td>
+                    <td>${{ element['LineExtensionAmount'] }} {{ element['LineExtensionAmountcurrencyID'] }}</td>
+                    <td>${{element['InvoiceLineTaxTotal']}}{{ element['PricePriceAmountcurrencyID'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>  
+        <div class = 'Summary'>
+            <div class = 'Notes'>
+                <p>笔记: {{ InvoicePaymentTermsNote }}</p>
+            </div>
+            <div class = 'PaymentSummary'> 
+                <div class = 'PaymentType'>
+                    <div class = 'Subtotal'>
+                        小计:
+                    </div>
+                    <div class = 'TaxAmount'>
+                        税:
+                    </div>
+                    <div class = TotalAmount> 
+                        总金额:
+                    </div>
+                </div>
+                <div class = 'PaymentAmount'>
+                    <div class = 'SubtotalAmount'>
+                        ${{ InvoiceLegalMonetaryTotalTaxExclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                    </div>
+                    <div class = 'Tax'>
+                        ${{InvoiceTaxTotalTaxSubtotalTaxAmount  }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                    </div>
+                    <div class = 'TotalAmount'>
+                        ${{ InvoiceLegalMonetaryTotalTaxInclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxInclusiveAmountcurrencyID }}
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        <div class = 'InvoiceTerms'>         
+            <div class = 'PaymentMethod'>
+                <h2>付款至: </h2>
+                <p>
+                    {{ InvoicePaymentMeansPayeeFinancialAccountFinancialInstitutionBranchID }}<br>
+                    {{ InvoicePaymentMeansPayeeFinancialAccountName }}<br>
+                    {{ InvoicePaymentMeansPayeeFinancialAccountID }}
+                </p>
+            </div>
+            <div class = 'Delivery'>
+                <h2>
+                    交付给:
+                </h2>
+                <p>
+                    {{ InvoiceDeliveryDeliveryLocationStreeetName }}{{ InvoiceDeliveryDeliveryLocationStreeetName }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationCityName }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationPostalZone }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationCountrySubentity }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationAddressLineLine }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationCountryIdentificationCode }}
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

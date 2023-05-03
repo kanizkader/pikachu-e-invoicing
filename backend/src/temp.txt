@@ -1,0 +1,184 @@
+def user_register(first_name, last_name):
+    '''
+    Description:
+        Given a user's first and last name, register the user into
+        the database and providing a unique user id.
+
+    Arguments:
+        first_name (string)  - The user's first name.
+        last_name (string)  - The user's last name.
+
+    Exceptions:
+        InputError - Occurs when the first name contains at least one character that is not
+        a alphabetical letter.
+                   - Occurs when the last name contains at least one
+       character that is not a alphabetical letter.
+
+    Return Value:
+        Returns ...
+    '''
+    # Checks if the first and last name is made of letters only
+    if not first_name.isalpha():
+        raise InputError('Invalid first name! Please try again.')
+    if not last_name.isalpha():
+        raise InputError('Invalid last name! Please try again.')
+    # Connect to the database file
+    conn = sqlite3.connect('user_data.db')
+
+    # Create a table to store user data
+    conn.execute('''CREATE TABLE IF NOT EXISTS users
+                (ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                FIRST_NAME              TEXT NOT NULL,
+                LAST_NAME               TEXT NOT NULL);''')
+    # Create a table to store the current user's id that is logged in
+    conn.execute('''CREATE TABLE IF NOT EXISTS currentuser
+                (CURRENT_USER_ID         INTEGER NOT NULL);''')
+
+    # Insert the user's data into the database and get the generated ID
+    cur = conn.cursor()
+    cur.execute("INSERT INTO users (FIRST_NAME, LAST_NAME) VALUES (?, ?)", (first_name, last_name))
+
+    conn.commit()
+    conn.close()
+
+# Given the u_id, logins in with the user associated with the u_id
+def user_login(u_id):
+    '''
+    Description:
+        Given the u_id, logins in with the user associated with the u_id
+
+    Arguments:
+        u_id (integer)  - unique integer that is used to identify a user
+
+    Exceptions:
+        InputError      - Occurs when a user is already logged in
+                        - Occurs when u_id is not an integer
+                        - Occurs if u_id does not exist in database
+
+    Return Value:
+        Returns ...
+    '''
+    if not isinstance(u_id, int):
+        raise InputError('Invalid u_id! Please try again.')
+    # Connect to the database file
+    conn = sqlite3.connect('user_data.db')
+    cur = conn.cursor()
+
+    # Gets the data of the user from the u_id
+    cur.execute("SELECT * FROM users WHERE ID=?", (u_id,))
+    user = cur.fetchone()
+
+    # Gets the id of the current user logged in
+    cur.execute("SELECT * FROM currentuser")
+    current_user = cur.fetchone()
+
+    # if there is no user logged in, insert the u_id into currentuser
+    if current_user is None:
+        cur.execute("INSERT INTO currentuser (CURRENT_USER_ID) VALUES (?)", (u_id,))
+    # if there is a user already logged in, raise an Input error
+    else:
+        raise InputError('A user is already logged in')
+
+    conn.commit()
+    conn.close()
+    # if user exists
+    if user is not None:
+        print("Logged in as user: " + user[1] + " " + user[2])
+    else:
+        raise InputError('Invalid u_id! Please try again.')
+
+# Logs out the current logged in user
+def user_logout():
+    '''
+    Description:
+        Logouts out the current user
+
+    Arguments:
+        None
+
+    Exceptions:
+        None
+
+    Return Value:
+        Returns ...
+    '''
+    # Connect to the database file
+    conn = sqlite3.connect('user_data.db')
+    cur = conn.cursor()
+
+    # Deletes the u_id in currentuser
+    cur.execute("DELETE FROM currentuser")
+
+    conn.commit()
+    conn.close()
+    print("Logged out successfully")
+
+# Prints the database
+def user_list_database():
+    '''
+    Description:
+        Prints the database.
+
+    Arguments:
+        None
+
+    Exceptions:
+        None
+
+    Return Value:
+        Returns ...
+    '''
+    # Connect to the database file
+    conn = sqlite3.connect('user_data.db')
+    cur2 = conn.cursor()
+
+    with conn:
+        # prints all the users
+        cur2.execute("SELECT * FROM users")
+        print(cur2.fetchall())
+        # prints the current user id
+        cur2.execute("SELECT * FROM currentuser")
+        currentuser = cur2.fetchall()
+        if len(currentuser) == 0:
+            print(currentuser)
+        else:
+            cur2.execute("SELECT * FROM currentuser")
+            print(cur2.fetchone()[0])
+
+    conn.commit()
+    conn.close()
+
+# Clears the user_data.db database
+def clear_database():
+
+    '''
+    Description:
+        Clears the user_data.db database
+
+    Arguments:
+        None
+
+    Exceptions:
+        None
+
+    Return Value:
+        Returns ...
+    '''
+    # Connect to the database file
+    conn = sqlite3.connect('user_data.db')
+    cur = conn.cursor()
+
+    # Cleears tables
+    cur.execute("DROP TABLE IF EXISTS users")
+    cur.execute("DROP TABLE IF EXISTS currentuser")
+    # Create tables again
+    cur.execute('''CREATE TABLE IF NOT EXISTS users
+            (ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            FIRST_NAME              TEXT NOT NULL,
+            LAST_NAME               TEXT NOT NULL);''')
+    cur.execute("""CREATE TABLE currentuser (
+                    CURRENT_USER_ID INTEGER PRIMARY KEY
+                )""")
+
+    conn.commit()
+    conn.close()

@@ -1,0 +1,152 @@
+<!doctype = html>
+<html lang = "en">
+    <head>
+        <meta charset="utf8">
+        <link rel="stylesheet" type="text/css" href="http://sprint3backend-env.eba-xjppryyv.us-east-1.elasticbeanstalk.com/detailed" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Noto Sans SC', sans-serif;
+            }
+        </style>
+        <title>e-Invoice</title>
+    </head>
+    <body>
+        <div class = 'InvoiceInformation'>
+            <div class = 'InvoiceDate'>
+                <h3>Date de facturation: {{ InvoiceIssueDate }}</h3>
+            </div>
+            <div class = 'InvoiceNumber'> 
+                <h3>N° de facture: {{ InvoiceID }}</h3>
+            </div>
+            <div class = 'InvoiceLocation'>
+                <h3>Emplacement du problème: {{ suppliercountryname }}</h3>
+            </div>
+        </div>
+        <div class = 'Title'>
+            <h1>Facture de paiement</h1>
+        </div>
+        <div class = 'PartyInformation'>
+            <div class = 'SupplierInformation'>
+                <h2>Facturé par: </h2>
+                <div class = 'SupplierLocation'>
+                    <p>
+                        {{ InvoiceAccountingCustomerPartyPartyPartyLegalEntityRegistrationName }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressStreetName }}
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressPostalZone }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyPostalAddressCityName }}<br>
+                        {{ suppliercountryname }}
+                    </p>
+                </div>
+                <div class = 'AdditionSupplierInformation'>
+                    <p>
+                        {{ InvoiceAccountingSupplierPartyPartyContactName }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyContactTelepohne }}<br>
+                        {{ InvoiceAccountingSupplierPartyPartyContactElectronicMail }}
+                    </p>
+                </div>
+            </div>
+            <div class = 'CustomerInformation'>
+                <h2>facturer:</h2>
+                <div class = 'AdditionCustomerInformation'>
+                    <p>
+                        {{ InvoiceAccountingCustomerPartyPartyContactName }}<br>
+                        {{ InvoiceAccountingCustomerPartyPartyContactTelepohne }}<br>
+                        {{ InvoiceAccountingCustomerPartyPartyContactElectronicMail }}
+                    </p>
+                </div>
+                <div class = 'CustomerLocation'>                
+                    <p>
+                        {{  InvoiceAccountingCustomerPartyPartyPartyNameName  }}<br>
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressStreetName  }}
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressAdditionalStreetName  }}<br>
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressCityName  }}<br>
+                        {{  InvoiceAccountingCustomerPartyPartyPostalAddressPostalZone  }}<br>
+                        {{  customercountryname  }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <table class = 'TransactionDetailsTable'>
+            <tr>
+                <th>Quantité</th>
+                <th>Code</th>
+                <th>Compte</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Montante</th>
+                <th>TPS</th>
+            </tr>
+            {% for element in InvoicedElements %}
+                <tr>
+                    <td>{{ element['InvoicedQuantity'] }}</td>
+                    <td>{{ element['InvoicedQuantityunitCode'] }}</td>
+                    <td></td>
+                    <td>{{ element['ItemName'] }}</td>
+                    <td>{{ element['ItemDescription'] }}</td>
+                    <td>${{ element['PricePriceAmount'] }} {{ element['PricePriceAmountcurrencyID'] }}</td>
+                    <td>${{ element['LineExtensionAmount'] }} {{ element['LineExtensionAmountcurrencyID'] }}</td>
+                    <td>${{element['InvoiceLineTaxTotal']}}{{ element['PricePriceAmountcurrencyID'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>  
+        <div class = 'Summary'>
+            <div class = 'Notes'>
+                <p>Remarques: {{ InvoicePaymentTermsNote }}</p>
+            </div>
+            <div class = 'PaymentSummary'> 
+                <div class = 'PaymentType'>
+                    <div class = 'Subtotal'>
+                        Total:
+                    </div>
+                    <div class = 'TaxAmount'>
+                        Impôt:
+                    </div>
+                    <div class = TotalAmount>
+                        Montant total:
+                    </div>
+                </div>
+                <div class = 'PaymentAmount'>
+                    <div class = 'SubtotalAmount'>
+                        ${{ InvoiceLegalMonetaryTotalTaxExclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                    </div>
+                    <div class = 'Tax'>
+                        ${{InvoiceTaxTotalTaxSubtotalTaxAmount  }} {{ InvoiceLegalMonetaryTotalTaxExclusiveAmountcurrencyID }}
+                    </div>
+                    <div class = 'TotalAmount'>
+                        ${{ InvoiceLegalMonetaryTotalTaxInclusiveAmount }} {{ InvoiceLegalMonetaryTotalTaxInclusiveAmountcurrencyID }}
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        <div class = 'InvoiceTerms'>         
+            <div class = 'PaymentMethod'>
+                <h2>Effectuez le paiement à: </h2>
+                <p>
+                    {{ InvoicePaymentMeansPayeeFinancialAccountFinancialInstitutionBranchID }}<br>
+                    {{ InvoicePaymentMeansPayeeFinancialAccountName }}<br>
+                    {{ InvoicePaymentMeansPayeeFinancialAccountID }}
+                </p>
+            </div>
+            <div class = 'Delivery'>
+                <h2>
+                    Livrer à:
+                </h2>
+                <p>
+                    {{ InvoiceDeliveryDeliveryLocationStreeetName }}{{ InvoiceDeliveryDeliveryLocationStreeetName }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationCityName }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationPostalZone }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationCountrySubentity }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationAddressLineLine }}<br>
+                    {{ InvoiceDeliveryDeliveryLocationCountryIdentificationCode }}
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
